@@ -1,6 +1,6 @@
 {
   "appId": "org.capacitor.quasar.app",
-  "appName": "Movie Blog",
+  "appName": "Quasar Todo",
   "webDir": "www",
   "server": {
     "androidScheme": "https",
