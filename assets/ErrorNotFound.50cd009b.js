@@ -6,7 +6,7 @@ import {
   aa as e,
   a8 as n,
   a9 as r,
-} from "./index.70c2f1ca.js";
+} from "assets/index.70c2f1ca.js";
 const c = o({ name: "ErrorNotFound" }),
   l = {
     class: "fullscreen bg-blue text-white text-center q-pa-md flex flex-center",
