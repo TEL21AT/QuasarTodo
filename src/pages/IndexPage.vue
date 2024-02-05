@@ -55,5 +55,6 @@ function addTodo() {
     text: newTodo.value,
     done: false,
   });
+  newTodo.value = "";
 }
 </script>
