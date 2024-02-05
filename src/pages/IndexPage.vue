@@ -1,95 +1,59 @@
 <template>
-  <q-page class="bg-grey-3 column">
+  <q-page>
     <div class="row q-pa-sm bg-primary">
       <q-input
-        v-model="newTask"
-        @keyup.enter="addTask"
+        v-model="newTodo"
         class="col"
-        square
+        placeholder="Add new task"
         filled
         bg-color="white"
-        placeholder="Add task"
         dense
       >
         <template v-slot:append>
-          <q-btn @click="addTask" round dense flat icon="add" />
+          <q-btn icon="add" flat round dense @click="addTodo" />
         </template>
       </q-input>
     </div>
-    <q-list class="bg-white" separator bordered>
+    <q-list separator bordered>
       <q-item
-        v-for="(task, index) in tasks"
-        :key="task.title"
-        @click="task.done = !task.done"
-        :class="{ 'done bg-blue-1': task.done }"
+        v-for="(todo, index) in todos"
+        :key="index"
         clickable
-        v-riple
+        v-ripple
+        @click="todo.done = !todo.done"
       >
         <q-item-section avatar>
-          <q-checkbox
-            v-model="task.done"
-            class="no-pointer-events"
-            color="primary"
-          />
+          <q-checkbox v-model="todo.done" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>{{ task.title }}</q-item-label>
+          <q-item-label :class="todo.done ? 'text-strike' : ''">
+            {{ todo.text }}
+          </q-item-label>
         </q-item-section>
-        <q-item-section v-if="task.done" side>
+        <q-item-section side>
           <q-btn
-            @click.stop="deleteTask(index)"
-            flat
-            round
-            dense
-            color="primary"
             icon="delete"
+            flat
+            dense
+            round
+            @click="todos.splice(index, 1)"
           />
         </q-item-section>
       </q-item>
     </q-list>
-    <div v-if="!tasks.length" class="no-tasks absolute-center">
-      <q-icon name="check" size="100px" color="primary"> </q-icon>
-      <div class="text-h5 text-primary text-center">No tasks</div>
-    </div>
   </q-page>
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
 import { ref } from "vue";
-const newTask = ref("");
-const tasks = ref([]);
-const $q = useQuasar();
 
-function deleteTask(index) {
-  $q.dialog({
-    title: "Confirm",
-    message: "Do you really want to delete the item?",
-    cancel: true,
-    persistent: true,
-  }).onOk(() => {
-    $q.notify(`Task ${tasks.value[index].title} deleted!`);
-    tasks.value.splice(index, 1);
-  });
-}
-function addTask() {
-  tasks.value.push({
-    title: newTask.value,
+const newTodo = ref("");
+const todos = ref([]);
+
+function addTodo() {
+  todos.value.push({
+    text: newTodo.value,
     done: false,
   });
-  newTask.value = "";
 }
 </script>
-
-<style lang="scss">
-.done {
-  .q-item__label {
-    text-decoration: line-through;
-    color: #bbb;
-  }
-}
-
-.no-tasks {
-  opacity: 0.5;
-}
-</style>

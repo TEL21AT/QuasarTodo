@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header>
+    <q-header elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -8,97 +8,87 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
+          @click="toggleLeftDrawer"
         />
+
+        <q-toolbar-title> Quasar App </q-toolbar-title>
+
+        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
       <div class="q-px-lg q-pt-xl q-mb-md">
         <div class="text-h3">Todo</div>
-        <div class="text-subtitle1">{{ todaysDate }}</div>
+        <div class="text-subtitle1">Today</div>
       </div>
-      <q-img src="~assets/mountains.jpg" class="header-image absolute-top" />
+      <q-img src="~assets/mountains.jpg" class="absolute-top header-image" />
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      :width="250"
-      :breakpoint="600"
-    >
-      <q-scroll-area
-        style="
-          height: calc(100% - 192px);
-          margin-top: 192px;
-          border-right: 1px solid #ddd;
-        "
-      >
-        <q-list padding>
-          <q-item to="/" exact clickable v-ripple>
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+      <q-list>
+        <q-img
+          class="absolute-top"
+          src="~assets/mountains.jpg"
+          style="height: 192px"
+        >
+          <div class="absolute-bottom bg-transparent">
+            <q-avatar size="80px">
+              <img src="~assets/profile.jpg" />
+            </q-avatar>
+            <div class="text-weight-bold">Daniel Muench</div>
+            <div>@danielmuench</div>
+          </div>
+        </q-img>
+        <q-list class="navigation-list">
+          <q-item to="/" clickable>
             <q-item-section avatar>
               <q-icon name="list" />
             </q-item-section>
-
-            <q-item-section> Todo </q-item-section>
+            <q-item-section>Todo List</q-item-section>
           </q-item>
-
-          <q-item to="/help" exact clickable v-ripple>
+          <q-item to="/help" clickable>
             <q-item-section avatar>
               <q-icon name="help" />
             </q-item-section>
-
-            <q-item-section> Help </q-item-section>
+            <q-item-section>Help</q-item-section>
           </q-item>
         </q-list>
-      </q-scroll-area>
-
-      <q-img
-        class="absolute-top"
-        src="~assets/mountains.jpg"
-        style="height: 192px"
-      >
-        <div class="absolute-bottom bg-transparent">
-          <q-avatar size="80px" class="q-mb-sm">
-            <img src="~assets/profile.jpg" />
-          </q-avatar>
-          <div class="text-weight-bold">Daniel Muench</div>
-          <div>@danielmuench</div>
-        </div>
-      </q-img>
+      </q-list>
     </q-drawer>
 
     <q-page-container>
-      <keep-alive>
-        <router-view />
-      </keep-alive>
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { date } from "quasar";
+import { defineComponent, ref } from "vue";
 
-export default {
+export default defineComponent({
   name: "MainLayout",
 
-  data() {
+  components: {},
+
+  setup() {
+    const leftDrawerOpen = ref(false);
+
     return {
-      leftDrawerOpen: false,
+      leftDrawerOpen,
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+      },
     };
   },
-
-  computed: {
-    todaysDate() {
-      const timeStamp = Date.now();
-      return date.formatDate(timeStamp, "dddd D MMMM");
-    },
-  },
-};
+});
 </script>
 
-<style lang="scss">
+<style>
 .header-image {
   height: 100%;
-  z-index: -1;
   opacity: 0.3;
-  filter: grayscale(100%);
+  z-index: -1;
+}
+.navigation-list {
+  height: calc(100% - 192px);
+  margin-top: 192px;
 }
 </style>
