@@ -8,6 +8,7 @@
         filled
         bg-color="white"
         dense
+        @keyup.enter="addTodo"
       >
         <template v-slot:append>
           <q-btn icon="add" flat round dense @click="addTodo" />
@@ -46,15 +47,16 @@
 
 <script setup>
 import { ref } from "vue";
+import { useTodosStore } from "src/stores/todos";
+
+const todosStore = useTodosStore();
 
 const newTodo = ref("");
-const todos = ref([]);
+// const todos = ref([]);
+const todos = todosStore.getTodos;
 
 function addTodo() {
-  todos.value.push({
-    text: newTodo.value,
-    done: false,
-  });
+  todosStore.addTodo(newTodo.value);
   newTodo.value = "";
 }
 </script>
