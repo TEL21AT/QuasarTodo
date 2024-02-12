@@ -50,6 +50,12 @@
             </q-item-section>
             <q-item-section>Help</q-item-section>
           </q-item>
+          <q-item to="/movie-blog" clickable>
+            <q-item-section avatar>
+              <q-icon name="movie" />
+            </q-item-section>
+            <q-item-section>Movie Blog</q-item-section>
+          </q-item>
         </q-list>
       </q-list>
     </q-drawer>
