@@ -1,0 +1,88 @@
+import express from "express";
+import Movie from "../models/Movie.js";
+
+const router = express.Router();
+
+/**
+ * @swagger
+ * /movies:
+ *   post:
+ *     summary: Adds a new movie to the list
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               director:
+ *                 type: string
+ *               year:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Returns the newly created movie
+ */
+router.post("/movies", async (req, res) => {
+  try {
+    const movie = new Movie(req.body);
+    await movie.save();
+    res.status(201).send(movie);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+/**
+ * @swagger
+ * /movies/{id}:
+ *   delete:
+ *     summary: Deletes a movie from the list
+ *     parameters:
+ *     - in: path
+ *       name: id
+ *       schema:
+ *         type: string
+ *       required: true
+ *       description: The movie ID
+ *     responses:
+ *       200:
+ *         description: Returns the deleted movie
+ *       404:
+ *         description: Movie not found
+ */
+router.delete("/movies/:id", async (req, res) => {
+  try {
+    const movie = await Movie.findByIdAndDelete(req.params.id);
+    if (!movie) {
+      return res.status(404).send();
+    }
+    res.send(movie);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+/**
+ * @swagger
+ * /movies:
+ *   get:
+ *     summary: Retrieves all movies
+ *     responses:
+ *       200:
+ *         description: Returns all movies
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/movies", async (req, res) => {
+  try {
+    const movies = await Movie.find();
+    res.send(JSON.stringify(movies, null, 2));
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+export default router;
