@@ -20,8 +20,8 @@ const swaggerOptions = {
   apis: ["./routes/*.js"], // paths to the API docs
 };
 
+// add swagger UI
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Connect to MongoDB
@@ -31,6 +31,14 @@ app.use(bodyParser.json());
 
 // use the movieRoutes
 app.use(movieRoutes);
+
+// custom exception handler
+app.use((error, req, res, next) => {
+  res.status(error.status).json({
+    name: error.name,
+    message: error.message,
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -1,5 +1,6 @@
 import express from "express";
 import Movie from "../models/Movie.js";
+import checkJwt from "./jwt.js";
 
 const router = express.Router();
 
@@ -14,6 +15,9 @@ const router = express.Router();
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - title
+ *               - director
  *             properties:
  *               title:
  *                 type: string
@@ -24,6 +28,8 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Returns the newly created movie
+ *       400:
+ *         description: Bad request
  */
 router.post("/movies", async (req, res) => {
   try {
@@ -53,7 +59,7 @@ router.post("/movies", async (req, res) => {
  *       404:
  *         description: Movie not found
  */
-router.delete("/movies/:id", async (req, res) => {
+router.delete("/movies/:id", checkJwt, async (req, res) => {
   try {
     const movie = await Movie.findByIdAndDelete(req.params.id);
     if (!movie) {
