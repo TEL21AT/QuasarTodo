@@ -31,13 +31,13 @@
         >
           <div class="absolute-bottom bg-transparent">
             <router-link to="/profile" :class="{ disabled: !isAuthenticated }">
-              <q-avatar size="80px">
-                <img src="~assets/profile.jpg" />
+              <q-avatar v-if="isAuthenticated" size="80px">
+                <img :src="user.picture" />
               </q-avatar>
             </router-link>
             <div v-if="isAuthenticated">
-              <div class="text-weight-bold">Daniel Muench</div>
-              <div>@danielmuench</div>
+              <div class="text-weight-bold">{{ user.name }}</div>
+              <div>@{{ user.name }}</div>
             </div>
             <div v-else>
               <div class="text-weight-bold">Guest</div>
@@ -80,7 +80,8 @@ import { ref } from "vue";
 import { useAuth0 } from "@auth0/auth0-vue";
 
 const leftDrawerOpen = ref(false);
-const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
+const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
