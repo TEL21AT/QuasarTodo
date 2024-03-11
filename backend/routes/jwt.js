@@ -13,7 +13,7 @@ const checkJwt = expressjwt({
 
   // Validate the audience and the issuer.
   audience: "t9wzEOtOAx3CyOLSQt8QU39cTrE2Gg1X",
-  issuer: `dev-4yituajghfjc8wca.us.auth0.com`,
+  issuer: `https://dev-4yituajghfjc8wca.us.auth0.com/`,
   algorithms: ["RS256"],
 });
 

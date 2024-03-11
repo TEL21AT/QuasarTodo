@@ -4,10 +4,12 @@ import connectDB from "./config/db.js";
 import movieRoutes from "./routes/movieRoutes.js";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import morgan from "morgan";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Swagger UI configuration
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -16,6 +18,20 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "A simple Express Movie API",
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   apis: ["./routes/*.js"], // paths to the API docs
 };
@@ -31,6 +47,9 @@ app.use(bodyParser.json());
 
 // use the movieRoutes
 app.use(movieRoutes);
+
+// log HTTP requests
+app.use(morgan("combined"));
 
 // custom exception handler
 app.use((error, req, res, next) => {
