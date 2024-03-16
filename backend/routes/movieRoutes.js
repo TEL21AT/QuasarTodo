@@ -1,6 +1,6 @@
 import express from "express";
 import Movie from "../models/Movie.js";
-import checkJwt from "./jwt.js";
+import checkJwt from "../jwt.js";
 
 const router = express.Router();
 
@@ -31,7 +31,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post("/movies", async (req, res) => {
+router.post("/movies", checkJwt, async (req, res) => {
   try {
     const movie = new Movie({ userId: req.auth.sub, ...req.body });
     await movie.save();
@@ -82,7 +82,7 @@ router.delete("/movies/:id", async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.get("/movies", async (req, res) => {
+router.get("/movies", checkJwt, async (req, res) => {
   try {
     const movies = await Movie.find({ userId: req.auth.sub });
     res.send(JSON.stringify(movies, null, 2));

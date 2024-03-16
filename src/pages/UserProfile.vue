@@ -47,7 +47,11 @@ function copyToken(text) {
 
 async function fetchTable() {
   try {
-    const response = await fetch("/api/movies", {});
+    const response = await fetch("/api/movies", {
+      headers: {
+        Authorization: `Bearer ${jwtStore.getToken}`,
+      },
+    });
     const data = await response.json();
     // console.log(data);
     movieList.value = data; // Fill movieList with the returned content
