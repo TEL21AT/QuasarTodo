@@ -48,6 +48,9 @@ app.use(morgan("combined"));
 
 app.use(bodyParser.json());
 
+// Serve static files from the 'public' directory
+app.use(express.static("public"));
+
 // use the movieRoutes
 app.use(movieRoutes);
 
