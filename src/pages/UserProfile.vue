@@ -41,11 +41,18 @@ const movieList = ref([]);
 
 function copyToken(text) {
   copy(jwtStore.getToken);
-  // copy(idTokenClaims.value.__raw);
+  jwtStore.setToken(idTokenClaims.value.__raw);
+  console.log("Copied token to clipboard and store");
 }
 
 onMounted(async () => {
   if (isAuthenticated.value) {
+    fetchTable();
+  }
+});
+
+watch(isAuthenticated.value, (newVal) => {
+  if (newVal) {
     fetchTable();
   }
 });
@@ -58,9 +65,10 @@ async function fetchTable() {
       },
     });
     const data = await response.json();
+    console.log("return" + data);
     movieList.value = data; // Fill movieList with the returned content
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
   }
 }
 
