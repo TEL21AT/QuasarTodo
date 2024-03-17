@@ -49,7 +49,6 @@
 import { ref } from "vue";
 import { useTodosStore } from "src/stores/todos";
 
-const { isAuthenticated, idTokenClaims } = useAuth0();
 const todosStore = useTodosStore();
 
 const newTodo = ref("");
