@@ -40,23 +40,12 @@ const { user, isAuthenticated, idTokenClaims, getAccessTokenSilently } =
 const movieList = ref([]);
 
 function copyToken(text) {
-  copy(idTokenClaims.value.__raw);
-  console.log(idTokenClaims.value);
-  jwtStore.setToken(idTokenClaims.value.__raw);
+  copy(jwtStore.getToken);
+  // copy(idTokenClaims.value.__raw);
 }
 
 onMounted(async () => {
-  if (isAuthenticated.value) {
-    fetchTable();
-  }
-});
-
-watch(isAuthenticated, (newValue) => {
-  if (newValue) {
-    fetchTable();
-  } else {
-    movieList.value = []; // Clear movieList if isAuthenticated becomes false
-  }
+  fetchTable();
 });
 
 async function fetchTable() {
