@@ -30,11 +30,20 @@
           style="height: 192px"
         >
           <div class="absolute-bottom bg-transparent">
-            <q-avatar size="80px">
-              <img src="~assets/profile.jpg" />
-            </q-avatar>
-            <div class="text-weight-bold">Daniel Muench</div>
-            <div>@danielmuench</div>
+            <router-link to="/profile" :class="{ disabled: !isAuthenticated }">
+              <q-avatar v-if="isAuthenticated" size="80px">
+                <img :src="user.picture" />
+              </q-avatar>
+            </router-link>
+            <div v-if="isAuthenticated">
+              <div class="text-weight-bold">{{ user.name }}</div>
+              <div>@{{ user.name }}</div>
+            </div>
+            <div v-else>
+              <div class="text-weight-bold">Guest</div>
+            </div>
+            <q-btn v-if="!isAuthenticated" @click="login">Log in</q-btn>
+            <q-btn v-if="isAuthenticated" @click="logoutUser">Log out</q-btn>
           </div>
         </q-img>
         <q-list class="navigation-list">
@@ -66,25 +75,23 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from "vue";
+<script setup>
+import { ref } from "vue";
+import { useAuth0 } from "@auth0/auth0-vue";
 
-export default defineComponent({
-  name: "MainLayout",
+const leftDrawerOpen = ref(false);
+const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
 
-  components: {},
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+function login() {
+  loginWithRedirect();
+}
 
-  setup() {
-    const leftDrawerOpen = ref(false);
-
-    return {
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      },
-    };
-  },
-});
+function logoutUser() {
+  logout({ logoutParams: { returnTo: "http://localhost:9000" } });
+}
 </script>
 
 <style>
