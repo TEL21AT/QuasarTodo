@@ -1,6 +1,6 @@
 import express from "express";
 import Movie from "../models/Movie.js";
-import checkJwt from "./jwt.js";
+import checkJwt from "../jwt.js";
 
 const router = express.Router();
 
@@ -31,13 +31,13 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post("/movies", async (req, res) => {
+router.post("/movies", checkJwt, async (req, res) => {
   try {
-    const movie = new Movie(req.body);
+    const movie = new Movie({ userId: req.auth.sub, ...req.body });
     await movie.save();
     res.status(201).send(movie);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send({ error: error.message });
   }
 });
 
@@ -47,12 +47,12 @@ router.post("/movies", async (req, res) => {
  *   delete:
  *     summary: Deletes a movie from the list
  *     parameters:
- *     - in: path
- *       name: id
- *       schema:
- *         type: string
- *       required: true
- *       description: The movie ID
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The movie ID
  *     responses:
  *       200:
  *         description: Returns the deleted movie
@@ -61,11 +61,14 @@ router.post("/movies", async (req, res) => {
  */
 router.delete("/movies/:id", checkJwt, async (req, res) => {
   try {
-    const movie = await Movie.findByIdAndDelete(req.params.id);
+    const movie = await Movie.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.auth.sub,
+    });
     if (!movie) {
       return res.status(404).send();
     }
-    res.send(movie);
+    res.send({ message: `Movie ${movie.title} deleted` });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -82,9 +85,9 @@ router.delete("/movies/:id", checkJwt, async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.get("/movies", async (req, res) => {
+router.get("/movies", checkJwt, async (req, res) => {
   try {
-    const movies = await Movie.find();
+    const movies = await Movie.find({ userId: req.auth.sub });
     res.send(JSON.stringify(movies, null, 2));
   } catch (error) {
     res.status(500).send(error);

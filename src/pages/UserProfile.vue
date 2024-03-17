@@ -40,20 +40,9 @@ const { user, isAuthenticated, idTokenClaims, getAccessTokenSilently } =
 const movieList = ref([]);
 
 function copyToken(text) {
-  copy(idTokenClaims.value.__raw);
-  console.log(idTokenClaims.value);
+  copy(jwtStore.getToken);
   jwtStore.setToken(idTokenClaims.value.__raw);
-}
-
-async function fetchTable() {
-  try {
-    const response = await fetch("/api/movies", {});
-    const data = await response.json();
-    // console.log(data);
-    movieList.value = data; // Fill movieList with the returned content
-  } catch (error) {
-    console.error(error);
-  }
+  console.log("Copied token to clipboard and store");
 }
 
 onMounted(async () => {
@@ -62,10 +51,34 @@ onMounted(async () => {
   }
 });
 
+watch(isAuthenticated.value, (newVal) => {
+  if (newVal) {
+    fetchTable();
+  }
+});
+
+async function fetchTable() {
+  try {
+    const response = await fetch("/api/movies", {
+      headers: {
+        Authorization: `Bearer ${jwtStore.getToken}`,
+      },
+    });
+    const data = await response.json();
+    console.log("return" + data);
+    movieList.value = data; // Fill movieList with the returned content
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
 function deleteMovie() {
   const movieId = selected.value[0]._id;
   console.log("delete movie: " + movieId);
   fetch(`/api/movies/${movieId}`, {
+    headers: {
+      Authorization: `Bearer ${jwtStore.getToken}`,
+    },
     method: "DELETE",
   })
     .then((response) => response.json())
