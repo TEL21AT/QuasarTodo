@@ -29,6 +29,9 @@ yarn-error.log*
 *.njsproj
 *.sln
 
+# static files
+backend/public/
+
 # local .env files
 .env.local*
 backend/.env

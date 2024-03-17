@@ -45,7 +45,9 @@ function copyToken(text) {
 }
 
 onMounted(async () => {
-  fetchTable();
+  if (isAuthenticated.value) {
+    fetchTable();
+  }
 });
 
 async function fetchTable() {

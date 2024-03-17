@@ -88,24 +88,11 @@ const jwtStore = useJwtStore();
 onMounted(() => {
   console.log("onMounted");
   console.log(isAuthenticated.value);
+  console.log(idTokenClaims.value);
   if (isAuthenticated.value) {
     console.log("isAuthenticated is true");
     console.log(isAuthenticated.value);
     jwtStore.setToken(idTokenClaims.value.__raw);
-  } else {
-    console.log("onMount: isAuthenticated is false");
-    // jwtStore.clearToken();
-  }
-});
-
-watch(isAuthenticated.value, (newValue) => {
-  console.log("watching isAuthenticated value");
-  if (newValue) {
-    console.log("inside watch: " + isAuthenticated.value);
-    jwtStore.setToken(idTokenClaims.value.__raw);
-  } else {
-    console.log("isAuthenticated is false");
-    jwtStore.clearToken();
   }
 });
 
