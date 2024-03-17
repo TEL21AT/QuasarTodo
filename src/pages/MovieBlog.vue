@@ -21,26 +21,29 @@
       <div class="q-pt-s">Das Rating ist: {{ ratingModel }}</div>
     </div>
   </div>
-
-  <div class="q-pa-lg">
-    <div class="q-col-gutter-md row items-start">
-      <div
-        v-for="movie in movies"
-        :key="movie.id"
-        class="col-6 col-md-4 col-lg-3"
-      >
-        <q-img :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path">
-          <div class="absolute-bottom text-subtitle1 text-center">
-            {{ movie.title }} - {{ movie.vote_average }}
-          </div>
-        </q-img>
-        <q-rating
-          v-model="movie.vote_average"
-          size="3.5em"
-          color="green-5"
-          icon="star_border"
-          icon-selected="star"
-        />
+  <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
+    <div class="q-pa-lg">
+      <div class="q-col-gutter-md row items-start">
+        <div
+          v-for="movie in movies"
+          :key="movie.id"
+          class="col-6 col-md-4 col-lg-3"
+        >
+          <router-link :to="{ name: 'MovieDetails', params: { id: movie.id } }">
+            <q-img :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path">
+              <div class="absolute-bottom text-subtitle1 text-center">
+                {{ movie.title }} - {{ movie.vote_average }}
+              </div>
+            </q-img>
+          </router-link>
+          <q-rating
+            v-model="movie.vote_average"
+            size="3.5em"
+            color="green-5"
+            icon="star_border"
+            icon-selected="star"
+          />
+        </div>
       </div>
     </div>
   </div>

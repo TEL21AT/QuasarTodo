@@ -1,3 +1,5 @@
+import { authGuard } from "@auth0/auth0-vue";
+
 const routes = [
   {
     path: "/",
@@ -7,6 +9,7 @@ const routes = [
       {
         path: "profile",
         component: () => import("pages/UserProfile.vue"),
+        beforeEnter: authGuard,
       },
     ],
   },
@@ -19,9 +22,13 @@ const routes = [
         component: () => import("pages/MovieBlog.vue"),
         name: "MovieBlog",
       },
+      {
+        path: "/movies/:id",
+        component: () => import("pages/MovieDetails.vue"),
+        name: "MovieDetails",
+      },
     ],
   },
-
   // Always leave this as last one,
   // but you can also remove it
   {
