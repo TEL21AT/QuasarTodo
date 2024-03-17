@@ -43,13 +43,13 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Connect to MongoDB
 connectDB();
 
+// log HTTP requests
+app.use(morgan("combined"));
+
 app.use(bodyParser.json());
 
 // use the movieRoutes
 app.use(movieRoutes);
-
-// log HTTP requests
-app.use(morgan("combined"));
 
 // custom exception handler
 app.use((error, req, res, next) => {

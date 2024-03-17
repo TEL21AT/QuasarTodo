@@ -59,9 +59,12 @@ router.post("/movies", checkJwt, async (req, res) => {
  *       404:
  *         description: Movie not found
  */
-router.delete("/movies/:id", async (req, res) => {
+router.delete("/movies/:id", checkJwt, async (req, res) => {
   try {
-    const movie = await Movie.findByIdAndDelete(req.params.id);
+    const movie = await Movie.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.auth.sub,
+    });
     if (!movie) {
       return res.status(404).send();
     }

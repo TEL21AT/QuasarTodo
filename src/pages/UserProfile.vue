@@ -45,6 +45,20 @@ function copyToken(text) {
   jwtStore.setToken(idTokenClaims.value.__raw);
 }
 
+onMounted(async () => {
+  if (isAuthenticated.value) {
+    fetchTable();
+  }
+});
+
+watch(isAuthenticated, (newValue) => {
+  if (newValue) {
+    fetchTable();
+  } else {
+    movieList.value = []; // Clear movieList if isAuthenticated becomes false
+  }
+});
+
 async function fetchTable() {
   try {
     const response = await fetch("/api/movies", {
@@ -53,53 +67,19 @@ async function fetchTable() {
       },
     });
     const data = await response.json();
-    // console.log(data);
     movieList.value = data; // Fill movieList with the returned content
   } catch (error) {
     console.error(error);
   }
 }
 
-onMounted(async () => {
-  if (isAuthenticated.value) {
-    fetchTable();
-  }
-});
-
-const fetchData = async () => {
-  try {
-    // const token = await getAccessTokenSilently();
-    const token = jwtStore.getToken;
-    const header = {
-      Authorization: `Bearer ${token}`,
-    };
-    console.log(header.Authorization);
-    console.log(header);
-    const response = await fetch("/api/movies", {
-      headers: {
-        ...header,
-      },
-    });
-    const data = await response.json();
-    console.log(data);
-    movieList.value = data; // Fill movieList with the returned content
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-watch(isAuthenticated, (newValue) => {
-  if (newValue) {
-    fetchData();
-  } else {
-    movieList.value = []; // Clear movieList if isAuthenticated becomes false
-  }
-});
-
 function deleteMovie() {
   const movieId = selected.value[0]._id;
   console.log("delete movie: " + movieId);
   fetch(`/api/movies/${movieId}`, {
+    headers: {
+      Authorization: `Bearer ${jwtStore.getToken}`,
+    },
     method: "DELETE",
   })
     .then((response) => response.json())
