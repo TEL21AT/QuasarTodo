@@ -20,6 +20,11 @@
       </div>
       <div class="q-pt-s">Das Rating ist: {{ ratingModel }}</div>
     </div>
+    <q-btn
+      @click="changeOrder()"
+      :label="asc ? 'Sort Desc' : 'Sort Asc'"
+      color="primary"
+    ></q-btn>
   </div>
   <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
     <div class="q-pa-lg">
@@ -54,10 +59,14 @@ import { ref, onMounted } from "vue";
 
 const movies = ref([]);
 const ratingModel = ref(3);
+const param = ref("popularity");
+const asc = ref(false);
 
-onMounted(async () => {
+const fetchMovies = async () => {
   const response = await fetch(
-    "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc",
+    `https://api.themoviedb.org/3/discover/movie?sort_by=${param.value}.${
+      asc.value ? "asc" : "desc"
+    }`,
     {
       headers: {
         Authorization:
@@ -71,6 +80,9 @@ onMounted(async () => {
   for (const movie of movies.value) {
     movie.vote_average = normalizeRating(movie.vote_average);
   }
+};
+onMounted(async () => {
+  fetchMovies();
 });
 
 const normalizeRating = (rating) => {
@@ -83,6 +95,10 @@ const incrementRating = () => {
   }
 };
 
+const changeOrder = () => {
+  asc.value = !asc.value;
+  fetchMovies();
+};
 const decrementRating = () => {
   if (ratingModel.value > 0) {
     ratingModel.value--;
