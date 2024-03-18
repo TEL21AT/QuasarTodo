@@ -8,8 +8,8 @@
           title="Movie List"
           :rows="movieList"
           :columns="columns"
-          row-key="name"
-          selection="single"
+          row-key="_id"
+          selection="multiple"
           v-model:selected="selected"
         />
 
