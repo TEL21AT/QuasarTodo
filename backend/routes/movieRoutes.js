@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /movies:
+ * /api/movies:
  *   post:
  *     summary: Adds a new movie to the list
  *     requestBody:
@@ -31,7 +31,7 @@ const router = express.Router();
  *       400:
  *         description: Bad request
  */
-router.post("/movies", checkJwt, async (req, res) => {
+router.post("/api/movies", checkJwt, async (req, res) => {
   try {
     const movie = new Movie({ userId: req.auth.sub, ...req.body });
     await movie.save();
@@ -43,7 +43,7 @@ router.post("/movies", checkJwt, async (req, res) => {
 
 /**
  * @swagger
- * /movies/{id}:
+ * /api/movies/{id}:
  *   delete:
  *     summary: Deletes a movie from the list
  *     parameters:
@@ -59,7 +59,7 @@ router.post("/movies", checkJwt, async (req, res) => {
  *       404:
  *         description: Movie not found
  */
-router.delete("/movies/:id", checkJwt, async (req, res) => {
+router.delete("/api/movies/:id", checkJwt, async (req, res) => {
   try {
     const movie = await Movie.findOneAndDelete({
       _id: req.params.id,
@@ -76,7 +76,7 @@ router.delete("/movies/:id", checkJwt, async (req, res) => {
 
 /**
  * @swagger
- * /movies:
+ * /api/movies:
  *   get:
  *     summary: Retrieves all movies
  *     responses:
@@ -85,7 +85,7 @@ router.delete("/movies/:id", checkJwt, async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-router.get("/movies", checkJwt, async (req, res) => {
+router.get("/api/movies", checkJwt, async (req, res) => {
   try {
     const movies = await Movie.find({ userId: req.auth.sub });
     res.send(JSON.stringify(movies, null, 2));

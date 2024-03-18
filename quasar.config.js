@@ -86,10 +86,10 @@ module.exports = configure(function (/* ctx */) {
         "/api": {
           target: "http://localhost:3000/",
           // changeOrigin: true,
-          // pathRewrite: {
-          //   "^/api/movies": "/movies",
-          // },
-          rewrite: (path) => path.replace(/^\/api/, ""),
+          pathRewrite: {
+            "^/api/": "/api",
+          },
+          // rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
     },

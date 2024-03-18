@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+// Für mehr paramter eines Films müssen diese hier hinzugefügt werden
+// Für Infos schau hier: https://mongoosejs.com/docs/schematypes.html
 const movieSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -13,6 +15,7 @@ const movieSchema = new mongoose.Schema({
   director: String,
   year: Number,
   ImdbRate: Number,
+  language: Array,
 });
 
 // create a unique compund index on userId and title
