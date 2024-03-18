@@ -27,21 +27,18 @@
 </template>
 
 <script setup>
-import { useAuth0 } from "@auth0/auth0-vue";
 import copy from "copy-to-clipboard";
 import { ref, watch, onMounted } from "vue";
-import { useJwtStore } from "src/stores/jwt";
+import { useAuth0 } from "@auth0/auth0-vue";
 
-const jwtStore = useJwtStore();
+const { isAuthenticated, user, idTokenClaims } = useAuth0();
+
 const selected = ref([]);
 
-const { user, isAuthenticated, idTokenClaims, getAccessTokenSilently } =
-  useAuth0();
 const movieList = ref([]);
 
 function copyToken(text) {
-  copy(jwtStore.getToken);
-  jwtStore.setToken(idTokenClaims.value.__raw);
+  copy(idTokenClaims.value.__raw);
   console.log("Copied token to clipboard and store");
 }
 
@@ -61,7 +58,7 @@ async function fetchTable() {
   try {
     const response = await fetch("/api/movies", {
       headers: {
-        Authorization: `Bearer ${jwtStore.getToken}`,
+        Authorization: `Bearer ${idTokenClaims.value.__raw}`,
       },
     });
     const data = await response.json();
@@ -77,7 +74,7 @@ function deleteMovie() {
   console.log("delete movie: " + movieId);
   fetch(`/api/movies/${movieId}`, {
     headers: {
-      Authorization: `Bearer ${jwtStore.getToken}`,
+      Authorization: `Bearer ${idTokenClaims.value.__raw}`,
     },
     method: "DELETE",
   })

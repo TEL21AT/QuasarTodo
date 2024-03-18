@@ -76,26 +76,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref } from "vue";
 import { useAuth0 } from "@auth0/auth0-vue";
-import { useJwtStore } from "src/stores/jwt";
+
+const { isAuthenticated, user, loginWithRedirect, logout } = useAuth0();
 
 const leftDrawerOpen = ref(false);
-const { loginWithRedirect, logout, isAuthenticated, user, idTokenClaims } =
-  useAuth0();
-const jwtStore = useJwtStore();
-
-onMounted(() => {
-  console.log("onMounted");
-  if (isAuthenticated.value) {
-    console.log("isAuthenticated is true");
-    jwtStore.setToken(idTokenClaims.value.__raw);
-  }
-});
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+
 function login() {
   loginWithRedirect();
 }
